@@ -6,19 +6,6 @@
 	<string>English</string>
 	<key>CFBundleDisplayName</key>
 	<string>supBOT</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>****</string>
-				<string>fold</string>
-				<string>disk</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-	</array>
 	<key>CFBundleExecutable</key>
 	<string>supBOT</string>
 	<key>CFBundleIconFile</key>
@@ -56,7 +43,7 @@
 		<key>alias</key>
 		<false/>
 		<key>argv_emulation</key>
-		<true/>
+		<false/>
 		<key>emulate_shell_environment</key>
 		<false/>
 		<key>no_chdir</key>
@@ -73,20 +60,21 @@
 		<false/>
 	</dict>
 	<key>PyResourcePackages</key>
-	<array/>
+	<array>
+	</array>
 	<key>PyRuntimeLocations</key>
 	<array>
-		<string>@executable_path/../Frameworks/Python.framework/Versions/3.6/Python</string>
+		<string>@executable_path/../Frameworks/Python.framework/Versions/2.7/Python</string>
 	</array>
 	<key>PythonInfoDict</key>
 	<dict>
 		<key>PythonExecutable</key>
-		<string>/usr/local/opt/python/bin/python3.6</string>
+		<string>/usr/local/opt/python@2/bin/python2.7</string>
 		<key>PythonLongVersion</key>
-		<string>3.6.4 (default, Mar  1 2018, 18:36:42) 
+		<string>2.7.14 (default, Mar 10 2018, 00:01:04) 
 [GCC 4.2.1 Compatible Apple LLVM 9.0.0 (clang-900.0.39.2)]</string>
 		<key>PythonShortVersion</key>
-		<string>3.6</string>
+		<string>2.7</string>
 		<key>py2app</key>
 		<dict>
 			<key>alias</key>
@@ -94,7 +82,7 @@
 			<key>template</key>
 			<string>app</string>
 			<key>version</key>
-			<string>0.13</string>
+			<string>0.14</string>
 		</dict>
 	</dict>
 </dict>

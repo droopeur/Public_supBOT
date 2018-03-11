@@ -6,13 +6,14 @@
 
 import os
 import time
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.webdriver.common.action_chains import ActionChains
+
 import re
 
 
@@ -116,6 +117,7 @@ def checkout(times):
             browser.find_element_by_id('order_billing_zip').send_keys(userInfos['adress']['zip'])
             selectcountry = Select(browser.find_element_by_id('order_billing_country'))
             selectcountry.select_by_visible_text(userInfos['adress']['country'])
+            Select(browser.find_element_by_id("credit_card_type")).select_by_visible_text(userInfos['card']['type'])
             browser.find_element_by_name('credit_card[cnb]').send_keys(userInfos['card']['number'])
             selectMonth = Select(browser.find_element_by_name('credit_card[month]'))
             selectMonth.select_by_visible_text(userInfos['card']['month'])
@@ -138,6 +140,9 @@ def checkout(times):
 
 from appJar import gui
 import threading
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 app = gui("SupBOT alpha", "600x800")
 
@@ -155,9 +160,8 @@ def MyThread2(categorie, Keywords, size, adress, userInfos, card, color, time,im
 def regword(word):
     regex = ''
     for x in word:
-        regex += x + '﻿?'
+        regex += x + u'\ufeff?'
     return regex
-
 
 def press(button):
     global categorie, Keywords, size, color, adress, card, userInfos
@@ -168,7 +172,7 @@ def press(button):
     images = True
     time = 0
     adress = {'street': '', 'city': '', 'zip': '', 'country': ''}
-    card = {'number': '', 'month': '', 'year': '', 'ccv': ''}
+    card = {'number': '', 'month': '', 'year': '', 'ccv': '', 'type': ''}
     userInfos = {'email': '', 'name': '', 'phoneNumber': '', 'adress': adress, 'card': card}
     userInfos['name'] = app.getEntry("First Name") + ' ' + app.getEntry("Last Name")
     userInfos['phoneNumber'] = app.getEntry("Phone Number")
@@ -177,7 +181,7 @@ def press(button):
     userInfos['adress']['city'] = app.getEntry("City")
     userInfos['adress']['zip'] = app.getEntry("Postal Code")
     userInfos['adress']['country'] = app.getOptionBox("Country")
-
+    userInfos['card']['type'] = app.getOptionBox("Credit Card")
     userInfos['card']['number'] = app.getEntry("Card Number")
     userInfos['card']['month'] = app.getOptionBox("month")
     userInfos['card']['year'] = app.getOptionBox("year")
@@ -216,10 +220,12 @@ app.addLabelEntry('Postal Code')
 app.addLabelOptionBox("Country", ["FRANCE"])
 app.stopLabelFrame()
 
-app.startLabelFrame("Visa Detail (Only Visa supported in this version)")
+app.startLabelFrame("Credit Card Detail")
 # these only affect the labelFrame
 app.setSticky("ew")
 app.setFont(15)
+app.addLabelOptionBox("Credit Card", ["Visa","American Express","Mastercard"])
+
 app.addLabelEntry("Card Number")
 app.addLabelOptionBox("month", ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
 app.addLabelOptionBox("year", ["2018", "2019", "2020", "2021", "2022", "2023"])
