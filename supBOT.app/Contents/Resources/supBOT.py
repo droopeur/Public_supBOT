@@ -13,6 +13,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.action_chains import ActionChains
+import socket
+import sys
+
 
 import re
 
@@ -20,7 +23,7 @@ import re
 def launchDriver(images):
     global browser
     firefox_profile = webdriver.FirefoxProfile()
-    if images==False:
+    if images == False:
         firefox_profile.set_preference('permissions.default.image', 2)
         firefox_profile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so', 'false')
     binary = FirefoxBinary('bin/Firefox.app/Contents/MacOS/firefox')
@@ -126,8 +129,8 @@ def checkout(times):
             browser.find_element_by_name('credit_card[vval]').send_keys(userInfos['card']['ccv'])
             selectBox = browser.find_element_by_id('order_terms')
             ActionChains(browser).move_to_element(selectBox).click().perform()
-            print('waiting '+str(times / 1000)+' seconds before checkout')
-            time.sleep(times/1000)
+            print('waiting ' + str(times / 1000) + ' seconds before checkout')
+            time.sleep(times / 1000)
             browser.find_element_by_name('commit').click()
 
             #  except:
@@ -141,13 +144,14 @@ def checkout(times):
 from appJar import gui
 import threading
 import sys
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-app = gui("SupBOT alpha", "600x800")
+app = gui("SupBOT alpha", '600x800')
 
 
-def MyThread2(categorie, Keywords, size, adress, userInfos, card, color, time,images):
+def MyThread2(categorie, Keywords, size, adress, userInfos, card, color, time, images):
     launchDriver(images)
     if categorie != '':
         goToCat(categorie)
@@ -162,6 +166,7 @@ def regword(word):
     for x in word:
         regex += x + u'\ufeff?'
     return regex
+
 
 def press(button):
     global categorie, Keywords, size, color, adress, card, userInfos
@@ -202,9 +207,9 @@ def press(button):
     if app.getEntry("Color") != '':
         color = regword(app.getEntry("Color"))
     print(Keywords)
-    t2 = threading.Thread(target=MyThread2, args=[categorie, Keywords, size, adress, userInfos, card, color, time, images])
+    t2 = threading.Thread(target=MyThread2,
+                          args=[categorie, Keywords, size, adress, userInfos, card, color, time, images])
     t2.start()
-
 
 app.startLabelFrame("Order Detail")
 # these only affect the labelFrame
@@ -220,11 +225,11 @@ app.addLabelEntry('Postal Code')
 app.addLabelOptionBox("Country", ["FRANCE"])
 app.stopLabelFrame()
 
-app.startLabelFrame("Credit Card Detail")
+app.startLabelFrame("Visa Detail (Only Visa supported in this version)")
 # these only affect the labelFrame
 app.setSticky("ew")
 app.setFont(15)
-app.addLabelOptionBox("Credit Card", ["Visa","American Express","Mastercard"])
+app.addLabelOptionBox("Credit Card", ["Visa", "American Express", "Mastercard"])
 
 app.addLabelEntry("Card Number")
 app.addLabelOptionBox("month", ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"])
@@ -238,26 +243,43 @@ app.setSticky("ew")
 app.setFont(15)
 app.addLabelOptionBox("category",
                       ["jackets", 'shirts', 'tops_sweaters', 'sweatshirts', 'pants', 'shorts', 'hats', 'bags',
-                       'accessories', 'shoes', 'skate'], 0, 0,2)
-app.addLabelOptionBox("size", ["Auto", "Small", "Medium", "Large", "Xlarge"], 0, 2,2)
+                       'accessories', 'shoes', 'skate'], 0, 0, 2)
+app.addLabelOptionBox("size", ["Auto", "Small", "Medium", "Large", "Xlarge"], 0, 2, 2)
 app.addLabelEntry("Color", 2, 0)
 
-app.addLabel("keywords", "keywords", 1, 0,1)
-app.addEntry("keyword1", 1, 1,1)
-app.addEntry("keyword2", 1, 2,1)
-app.addEntry("keyword3", 1, 3,1)
-app.addEntry("keyword4", 1, 4,1)
+app.addLabel("keywords", "keywords", 1, 0, 1)
+app.addEntry("keyword1", 1, 1, 1)
+app.addEntry("keyword2", 1, 2, 1)
+app.addEntry("keyword3", 1, 3, 1)
+app.addEntry("keyword4", 1, 4, 1)
 app.stopLabelFrame()
-
 
 app.startLabelFrame("Browser Option")
 # these only affect the labelFrame
 app.setSticky("ew")
 app.setFont(15)
-app.addLabelEntry("Checkout Time (ms)", 0,0,1)
-app.addCheckBox("Load Images", 0,3,1)
+app.addLabelEntry("Checkout Time (ms)", 0, 0, 1)
+app.addCheckBox("Load Images", 0, 3, 1)
 app.setCheckBox("Load Images")
 app.stopLabelFrame()
 
 app.addButtons(["Submit"], press)
-app.go()
+
+
+def logIn():
+    # Create a TCP/IP socket
+
+    if app.getEntry("e-mail") == 'parsell@supbot.com':
+        app.hideSubWindow("SupBOT Login")
+        app.show()
+app.startSubWindow("SupBOT Login", modal=True)
+app.startLabelFrame("Login")
+# these only affect the labelFrame
+app.setSticky("ew")
+app.setFont(15)
+app.addLabelEntry("e-mail")
+app.stopLabelFrame()
+app.addButtons(["logIn"], logIn)
+app.stopSubWindow()
+
+app.go(startWindow='SupBOT Login')
